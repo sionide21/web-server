@@ -51,4 +51,18 @@ RSpec.describe WebServer::Response do
       expect(socket.written_value).to start_with("HTTP/1.1 403 Leave Me Be")
     end
   end
+
+  describe "headers" do
+    it "manages the headers to send to the client" do
+      response.headers["X-Powered-By"] = "Gnomes"
+      response.flush
+      expect(socket.written_value).to include("X-Powered-By: Gnomes")
+    end
+
+    it "still computes the content length" do
+      response.headers["Content-Length"] = "Bananas"
+      response.flush
+      expect(socket.written_value).to include("Content-Length: 0")
+    end
+  end
 end

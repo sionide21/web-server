@@ -9,6 +9,9 @@ WebServer.new(8080).run do |client|
   if request.uri.path == "/404"
     response.status = 404
     response.write("Wrong turn!")
+  elsif request.uri.path == "/html"
+    response.headers["Content-Type"] = "text/html"
+    response.write("<center><h1>HTML</h1></center>")
   else
     response.write("Hello from #{request.uri.path}\n")
 

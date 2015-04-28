@@ -2,12 +2,13 @@ require 'webserver/status_codes'
 
 module WebServer
   class Response
-    attr_accessor :status
+    attr_accessor :status, :headers
 
     def initialize(writer)
       @writer = writer
       @body = ""
       self.status = 200
+      self.headers = {}
     end
 
     def flush
@@ -36,14 +37,14 @@ module WebServer
     end
 
     def encode_headers
-      headers.map { |header| header.join(": ") }.join("\r\n")
+      headers.merge(computed_headers).map { |header| header.join(": ") }.join("\r\n")
     end
 
     def write_body
       @writer.write(@body)
     end
 
-    def headers
+    def computed_headers
       { "Content-Length" => @body.length }
     end
 
