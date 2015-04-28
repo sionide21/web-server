@@ -1,8 +1,13 @@
+require 'webserver/status_codes'
+
 module WebServer
   class Response
+    attr_accessor :status
+
     def initialize(writer)
       @writer = writer
       @body = ""
+      self.status = 200
     end
 
     def flush
@@ -18,8 +23,16 @@ module WebServer
 
     private
 
+    def status_message
+      if status.respond_to?(:split) && status.split[1]
+        status.split[1]
+      else
+        HTTP_STATUS_CODES.fetch(status.to_i, status)
+      end
+    end
+
     def status_line
-      "HTTP/1.1 200 OK"
+      ["HTTP/1.1", status, status_message].join(" ")
     end
 
     def encode_headers

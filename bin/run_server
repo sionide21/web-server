@@ -6,11 +6,16 @@ require "webserver"
 
 WebServer.new(8080).run do |client|
   request, response = client.request, client.response
-  response.write("Hello from #{request.uri.path}\n")
+  if request.uri.path == "/404"
+    response.status = 404
+    response.write("Wrong turn!")
+  else
+    response.write("Hello from #{request.uri.path}\n")
 
-  if request.request_method == "POST"
-    response.write("\nYou said:\n")
-    response.write(request.body.read)
-    response.write("\n")
+    if request.request_method == "POST"
+      response.write("\nYou said:\n")
+      response.write(request.body.read)
+      response.write("\n")
+    end
   end
 end
