@@ -1,4 +1,3 @@
-require 'socket'
 require 'webserver/server'
 
 module WebServer
